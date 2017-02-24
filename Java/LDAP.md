@@ -60,3 +60,11 @@ filter.and(new EqualsFilter("cn", username));
 List list = ldapTemplate.search("", filter.encode(), (Attributes attrs) -> {return attrs.get("cn").get();});
 ```
 
+按照合适条件，获取所有用户列表
+```
+AndFilter filter = new AndFilter();
+filter.and(new EqualsFilter("objectclass", "person"));  
+List list = ldapTemplate.search("", filter.encode(), (Attributes attrs) -> {return attrs.get("cn").get();});
+
+```
+

@@ -26,7 +26,7 @@ public class WebsocketConfig extends WebMvcConfigurerAdapter implements WebSocke
 ```
 registry.addHandler(handler, "/xxx/ws").addInterceptors(new HandShake()).setAllowedOrigins("*");
 ```
-中，必须加上setAllowedOrigins("*")，否则会提示403错误。因为spring4会默认加上OriginHandshakeInterceptor的拦截器，基于同源策略，如果跨域，可能会失败。
+中，必须加上setAllowedOrigins("*")，允许跨的域可以自定义，否则会提示403错误。因为spring4会默认加上OriginHandshakeInterceptor的拦截器，基于同源策略，如果跨域，可能会失败。
 ```
 public class HandShake implements HandshakeInterceptor {
     @Override
@@ -54,20 +54,31 @@ public class XXXWebSocketHandler implements WebSocketHandler {
     }
 
     @Override
-    public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        if (session.isOpen()) {
-            session.close();
-        }
-    }
-
-    @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
         System.err.println(session.getId() + " is close.");
     }
+}
+```
 
-    @Override
-    public boolean supportsPartialMessages() {
-        return false;
-    }
+js端并不处理ping,pong消息，这块直接由浏览器托管了。后端定时主动发起ping消息，浏览器接收到之后，会即刻返回pong消息，故具体的心跳保活就交由后端来处理。
+```
+/**
+ * 心跳保活
+ * @param session
+ */
+private void keepAlive(WebSocketSession session) {
+    executors.submit(() -> {
+        while (session.isOpen()) {
+            try {
+                Thread.sleep(TIME_ALIVE_INTERVAL);
+                byte[] bs = new byte[1];
+                bs[0] = 'alive';
+                ByteBuffer byteBuffer = ByteBuffer.wrap(bs);
+                session.sendMessage(new PingMessage(byteBuffer));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    });
 }
 ```
