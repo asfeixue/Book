@@ -1,9 +1,10 @@
-excel相关操作
+# excel相关操作
 
 excel的操作基本都用apache的poi工具包来支持。
-#excel下载
 
-###XSSFWorkbook
+## excel下载
+
+### XSSFWorkbook
 10w左右的数据量，可以使用XSSFWorkbook，可以提供丰富的cell控制能力。但是因为整个文件都在内存中，数据量过大容易导致OOM，同时过多数据需要同步下载等待时间也过长，体验不好。
 
 让宽度自适应写法：
@@ -13,7 +14,7 @@ for(int i = 0; i < headers.length; i++) {
 }
 ```
 
-###SXSSFWorkbook
+### SXSSFWorkbook
 10w+的数据，最好用SXSSFWorkbook，可以提供基础的cell控制能力。因为此时生成excel的模式是流模式，生成的时候，内存中的数据量是有限的，超出的部分数据会写入本地临时文件。因此生成excel的时候，不会导致OOM。
 ```
 SXSSFWorkbook wb = new SXSSFWorkbook(100);

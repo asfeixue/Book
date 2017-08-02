@@ -1,7 +1,7 @@
-#LDAP
+# LDAP
 
-##ldapTemplate使用
-###新增数据
+## ldapTemplate使用
+### 新增数据
 ```
 String username = "test02";
 String dn = "cn=" + username + ",ou=users,ou=system";
@@ -22,21 +22,21 @@ attrs.put("mail", "test02@xxxxxx");
 
 ldapTemplate.bind(dn, null, attrs);
 ```
-###删除数据
+### 删除数据
 ```
 String dn = "cn=" + username + ",ou=users,ou=system";
 ldapTemplate.unbind(dn);
 ```
 删除数据必须先检查一下是否存在，否则会抛出未找到指定dn的异常。
 
-###账户密码校验
+### 账户密码校验
 ```
 AndFilter filter = new AndFilter();
 filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("cn", username));
 boolean authResult = ldapTemplate.authenticate(LdapUtils.emptyLdapName(), filter.toString(), password);
 ```
 
-###搜索
+### 搜索
 lookup用于查询已知存在的dn，如果不存在，将会抛出如下异常。
 ```
 ERR_648 Invalid search base cn=test02,ou=users,ou=system]; nested exception is javax.naming.NameNotFoundException: [LDAP: error code 32 - NO_SUCH_OBJECT: failed for MessageType : SEARCH_REQUEST

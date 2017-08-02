@@ -1,11 +1,11 @@
 Websocket
 
-#client side
+# client side
 基于Angular 1.x的前端功能，选择了angular-websocket.js作为支持库。
 具体文档如下：
 https://github.com/AngularClass/angular-websocket
 
-#server side
+# server side
 服务端选择spring4。具体实现代码如下：
 配置websocket支持如下：
 ```

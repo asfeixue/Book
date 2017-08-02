@@ -14,7 +14,7 @@ git config core.ignorecase false
 
 将ignorecase设置为false即可。
 
-##删除commit
+## 删除commit
 不小心提交了错误的代码到库上，想要删除最近一次提交的所有信息（包括代码和日志）。
 删除最后一次的提交记录：
     
