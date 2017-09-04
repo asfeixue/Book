@@ -1,4 +1,7 @@
-Mybatis源码解读.md
+# Mybatis源码解读
+
+关于功能介绍很全面，详细。
+https://my.oschina.net/u/3080373/blog/884176
 
 ## 1.日志
 logging package下的类图如下：
@@ -7,10 +10,19 @@ logging package下的类图如下：
 作为基础框架，本身的日志独立于任意日志框架，避免强绑定带来的依赖传递，同时又尽可能支持现有的任意日志框架，对具体使用的业务环境更友好。
 
 mybatis按照如下顺序尝试加载具体日志框架：
-    
-    slf4j》commons-logging》log4j2》log4j》jdk-logging》no-log（丢弃所有日志）
 
+```    
+slf4j -> commons-logging -> log4j2 -> log4j -> jdk-logging -> no-log（丢弃所有日志）
+```
 从这里可以看出来，mybatis并未支持logback，如果日志用logback，最好还是通过slf4j来驱动。
+
+### 日志层设计
+Java的日志框架有很多种，如：commons-longging,log4j2,log4j,jdk-logging,logback等。业务项目和中间件项目在日志层上的实现上会存在一些差异。
+在现在的业务项目开发中，基本不需要自己维护日志层。直接基于slf4j的API进行日志操作，各种日志框架下输出的日志都经过slf4j统一转向指定的日志框架输出即可。
+
+中间件相对要求更高一些，比如兼容更多的使用场景，不对环境过多依赖。
+日志有2个基本API，Log,LogFactory。
+LogFactory 负责按上文所述的框架顺序初始化具体日志框架的LogFactory。
 
 ## 2.缓存
 每一个实现都完成一个原子语义，可以通过自由组合形成拥有多重语义的缓存实现，是一个灵活的缓存解决方案。

@@ -123,3 +123,34 @@ public class MCSLock {
 }
 ```
 此类型的Lock构造了一个真实的链表，每个新的节点都会被上个节点持有句柄，当上个节点释放锁时，会通知下个节点。此时每个节点仅需要检查自己的状态，不需要访问其它线程的资源。相比上个类型的锁，性能上会有较大提升。
+
+### LockSupport
+基础的线程阻塞原语，用于创建lock或者其它的同步对象。
+主要包括2类方法。
+#### park
+返回情况如下：
+    1.  其它thread以当前线程作为目标调用unpark；
+    2.  其它thread中断了当前线程的执行；
+    3.  未知的任意其它原因导致的返回；
+park调用在permit有效时，会立即返回，否则会阻塞线程。但是因为情况3的存在，故必须在重新检查返回条件的循环里调用此方法。
+#### unpark
+unpark调用在permit无效时，使得permit有效。
+
+// 返回提供给最近一次尚未解除阻塞的park方法调用的blocker对象，如果该调用不受阻塞，则返回null。
+static Object getBlocker(Thread t)
+// 为了线程调度，禁用当前线程，除非许可可用。
+static void park()
+// 为了线程调度，在许可可用之前禁用当前线程。
+static void park(Object blocker)
+// 为了线程调度禁用当前线程，最多等待指定的等待时间，除非许可可用。
+static void parkNanos(long nanos)
+// 为了线程调度，在许可可用前禁用当前线程，并最多等待指定的等待时间。
+static void parkNanos(Object blocker, long nanos)
+// 为了线程调度，在指定的时限前禁用当前线程，除非许可可用。
+static void parkUntil(long deadline)
+// 为了线程调度，在指定的时限前禁用当前线程，除非许可可用。
+static void parkUntil(Object blocker, long deadline)
+// 如果给定线程的许可尚不可用，则使其可用。
+static void unpark(Thread thread)
+
+三种形式的 park 还各自支持一个blocker对象参数。此对象在线程受阻塞时被记录，以允许监视工具和诊断工具确定线程受阻塞的原因。在线程dump的时候，可以看到具体的阻塞对象。
