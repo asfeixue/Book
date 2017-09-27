@@ -33,9 +33,11 @@ class X {
 ## ReentrantLock与synchronized比较
 - 相同：ReentrantLock提供了synchronized类似的功能和内存语义。
 - 不同：
-1. ReentrantLock提供了时间锁等候，可中断锁等候等，因此更有扩展性。在多条件变量和高度竞争场合，ReentrantLock更合适，ReentrantLock还提供了Condition，对线程的等待和唤醒等操作更加灵活。
-2. ReentrantLock性能相比synchronized好一点。
-3. ReentrantLock提供可轮询的锁请求，获取失败可以下次重试，相对不容易产生死锁一些。synchronized一旦进入锁请求要么成功，要么当前线程持续阻塞，更容易产生死锁一点。
+1. ReentrantLock提供了时间锁等候，可中断锁等候，锁公平等，因此更有扩展性。在多条件变量和高度竞争场合，ReentrantLock更合适，ReentrantLock还提供了Condition，对线程的等待和唤醒等操作更加灵活。
+2. 高竞争度的条件下，ReentrantLock性能相比synchronized好一点。
+3. 因为JVM对synchronized的优化，低烈度的竞争synchronized性能会比ReentrantLock好一些。
+4. ReentrantLock提供可轮询的锁请求，获取失败可以下次重试，相对不容易产生死锁一些。synchronized一旦进入锁请求要么成功，要么当前线程持续阻塞，更容易产生死锁一点。
+5. synchronized可以在dump中看到，有明确关键字可以提取出来。ReentrantLock是一个普通对象，工具等无法直观识别。
 
 ## 基本功能
 1. 支持可轮询的锁请求
