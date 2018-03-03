@@ -18,3 +18,12 @@ InputStream inputStream = Thread.currentThread().getContextClassLoader().getReso
     FileUtils.copyToFile(inputStream, new File("./" + path));
 ```
 通过相对路径jar内的相对路径定位，然后直接获取流。不要通过URL中转。因为读取转换为File时，处理的URL会提示：java.lang.IllegalArgumentException: URI is not hierarchical。
+
+# 流划分
+通过输入、输出、基于字节或者字符、以及其他比如缓冲、解析之类的特定用途划分的大部分Java IO类的表格。
+![i/o](../../static/java i/o.png)
+
+# PushbackInputStream
+支持将从流中读过的内容重置回流中，以便于后续再次读流。
+# BufferedInputStream
+支持一次读取一个较大的块到内建的缓冲区，相比直接读流，可以有效的提升IO读取速度。
